@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 class Player{
@@ -59,6 +60,19 @@ class Player{
     }
     public List<Card> getCardsInHand(){
         return this.cardsInHand;
+    }
+    public boolean removeCard(Card card){
+        Iterator<Card> cardIter = cardsInHand.iterator();
+        while(cardIter.hasNext()){
+            Card c = cardIter.next();
+            
+            if(c.equals(card)){
+                
+                cardIter.remove();
+                return true;
+            }
+        }
+        return false;
     }
     public void clearHand(){
         this.cardsInHand.clear();

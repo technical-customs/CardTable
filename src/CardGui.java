@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -67,9 +68,9 @@ class CardGui extends JPanel{
         //north.render();
         south = new PlaceMat((ww/2) - (baseSize/2), (hh/2) + (baseSize/2) + 2 ,baseSize,baseSize/2);
         //south.render();
-        east = new PlaceMat((ww/2) - (baseSize/2) - (baseSize/2) - 2, (hh/2) - (baseSize/2) ,baseSize/2,baseSize);
+        east = new PlaceMat((ww/2) + (baseSize/2) + 2, (hh/2) - (baseSize/2) ,baseSize/2,baseSize);
         //east.render();
-        west = new PlaceMat((ww/2) + (baseSize/2) + 2, (hh/2) - (baseSize/2) ,baseSize/2,baseSize);
+        west = new PlaceMat((ww/2) - (baseSize/2) - (baseSize/2) - 2, (hh/2) - (baseSize/2) ,baseSize/2,baseSize);
         //west.render();
         
         //east.addCard(testcard1, false);
@@ -98,6 +99,9 @@ class CardGui extends JPanel{
         frame.setVisible(true);
     }
     public void setupDeck(CardDeck deck){
+        if(!played.isEmpty()){
+           played.clear();
+        }
         this.deck = deck;
         this.deck.setX(tt.getDeckPlaceHolderLocation().x);
         this.deck.setY(tt.getDeckPlaceHolderLocation().y);
@@ -124,7 +128,18 @@ class CardGui extends JPanel{
     public PlaceMat getWestMat(){
         return west;
     }
-            
+    public void syncMats(){
+        //new Thread(new Runnable(){
+            //@Override
+            //public void run(){
+                north.syncCards();
+                south.syncCards();
+                east.syncCards();
+                west.syncCards();
+            //}
+        //}).start();
+        
+    }
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -185,7 +200,7 @@ class CardGui extends JPanel{
         if(deck != null){
             deck.draw(g2);
         }
-        if(played != null){
+        if(!played.isEmpty()){
             Iterator<Card> cardIter = played.iterator();
             while(cardIter.hasNext()){
                 Card card = cardIter.next();
@@ -194,21 +209,24 @@ class CardGui extends JPanel{
         }
         //mat north
         north.draw(g2);
-        
+        //north.syncCards();
         //mat south
         south.draw(g2);
-        
+        //south.syncCards();
         //mat east
         east.draw(g2);
-        
+        //east.syncCards();
         //mat west
         west.draw(g2);
-        
+        //west.syncCards();
         
     }
     
     public void addKeyControls(KeyAdapter keycontrol){
         this.addKeyListener(keycontrol);
+    }
+    public void addMouseControls(MouseAdapter mousecontrol){
+        this.addMouseListener(mousecontrol);
     }
     public static void main(String[] args){
         CardGui gui = new CardGui();

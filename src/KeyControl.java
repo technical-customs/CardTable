@@ -62,12 +62,13 @@ class KeyControl extends KeyAdapter{
             try{
                 model.recollectDeck();
             }catch(Exception ex){
-                
+                System.out.println("collect " + ex);
             }
             
             model.getDeck().makeDeck(1);
             model.getDeck().shuffleDeck();
             gui.setupDeck(model.getDeck());
+            
         }
         if(keyCode == KeyEvent.VK_D){
             System.out.println("Deal cards");
@@ -86,7 +87,7 @@ class KeyControl extends KeyAdapter{
             }while(choice < 1 || choice > 7);
             
             model.dealCards(choice);
-            
+            gui.syncMats();
             System.out.println(model.toString());
         }
         if(keyCode == KeyEvent.VK_S){
@@ -102,7 +103,7 @@ class KeyControl extends KeyAdapter{
             System.out.println("Empty Field");
             
             model.emptyField();
-            gui.getPlayed().addAll(model.getCardsPlayed());
+            //gui.getPlayed().addAll(model.getCardsPlayed());
             
             for(Card card: model.getCardsPlayed()){
                 card.reset();
@@ -118,6 +119,14 @@ class KeyControl extends KeyAdapter{
             //}
             
         }
+        if(keyCode == KeyEvent.VK_C){
+            System.out.println("Collect cards");
+            
+            model.collectHighlightedCard();
+            //gui.getPlayed().addAll(model.getCardsPlayed());
+            
+        }
+        
     }
     
     

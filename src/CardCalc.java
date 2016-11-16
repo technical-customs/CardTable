@@ -4,6 +4,7 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +17,10 @@ class CardCalc {
     final private List<Card> cardsInPlay;
     final private Player[] players;
     
-    
-    
     public CardCalc(){
         deck = new CardDeck();
-        cardsPlayed = new ArrayList<>();
-        cardsInPlay = new ArrayList<>();
+        cardsPlayed = new ArrayList<>(); //card grave
+        cardsInPlay = new ArrayList<>(); //cards in all hands
         players = new Player[MAXPLAYERS];
         
     }
@@ -126,13 +125,54 @@ class CardCalc {
             cardsPlayed.add(card);
         }
         cardsInPlay.clear();
+    }
+    public synchronized void collectCard(Card card){
+        try{
+            for(Player player: players){
+                if(player == null){
+                    continue;
+                }
+                
+                if(player.removeCard(card)){
+                    cardsPlayed.add(card);
+                    cardsInPlay.remove(card);
+                    
+                    System.out.println("Collected: " + cardsPlayed);
+                }
+            }
+        }catch(Exception ex){
+            System.out.println("Collect ex: " + ex);
+        }
         
+    }
+    public synchronized void collectHighlightedCard(){
+        List<Card> highlighted = new ArrayList<>();
+        try{
+            Iterator<Card> cardIter = cardsInPlay.iterator();
+            while(cardIter.hasNext()){
+                Card card = cardIter.next();
+                
+                if(card.getHighlight()){
+                    System.out.println("HIGHLIGHTED: " + card.toString());
+                    highlighted.add(card);
+                }
+            }
+            
+            for(Card card: highlighted){
+                collectCard(card);
+            }
+            System.out.println("Highlighted: " + highlighted.toString());
+        }catch(Exception ex){
+            System.out.println("Collect Highlight ex: " + ex);
+            
+        }
         
     }
     public void recollectDeck(){
         emptyField();
         cardsPlayed.clear();
         deck.collectDeck();
+        
         for(Card card: deck.getCards()){
             card.show(false);
             card.reset();
@@ -141,6 +181,10 @@ class CardCalc {
     
     @Override
     public String toString(){
+        System.out.println("Cards in play: " + getCardsInPlay().toString());
+        System.out.println("In Deck: " + calcDeck().toString());
+        System.out.println("Cards Played: " + getCardsPlayed().toString());
+        
         for(Player player: players){
             if(player == null){
                 continue;

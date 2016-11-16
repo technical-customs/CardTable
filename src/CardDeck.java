@@ -42,6 +42,11 @@ class CardDeck {
         dealtCards.clear();
     }
     public void makeDeck(int num){
+        //System.out.println("Cards size " + cards.size());
+        collectDeck();
+        cards.clear();
+        System.out.println("Cards size " + cards.size());
+        
         numofdecks = num;
         for(int xx = 0; xx < num; xx++){
             for(CardSuit suit: suits){
@@ -50,6 +55,7 @@ class CardDeck {
                 }
             }
         }
+        System.out.println("Cards size " + cards.size());
         
     }
     public void shuffleDeck(){
