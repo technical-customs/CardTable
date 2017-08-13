@@ -4,16 +4,20 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class PlaceMat {
     private Rectangle[] placeHolderLocations = new Rectangle[7];
+    private Card[] cardSpot = new Card[7];
+    private Map< LinkedHashMap<Integer,Rectangle> ,Card> spotMap = new LinkedHashMap<>();
     
-    
-    final private List<Card> cards;
+    private List<Card> cards;
     private Player player;
     private int x;
     private int y;
@@ -25,17 +29,13 @@ class PlaceMat {
         this.y = y;
         this.width = width;
         this.height = height;
-        cards = new ArrayList<>();
-        
-        
-        
-        
+        cards = new ArrayList<>(); 
     }
-
     private void initiateMat(boolean northsouth){
         if(northsouth){
             //northsouth
             for(int xx = 0; xx < placeHolderLocations.length; xx++){
+                
                 int px = 0;
                 int py = 0;
 
@@ -47,6 +47,9 @@ class PlaceMat {
                 py = (this.y + (this.height)/2) - (Card.CARDHEIGHT/2);
 
                 placeHolderLocations[xx] = new Rectangle(px,py,Card.CARDWIDTH,Card.CARDHEIGHT);
+                LinkedHashMap<Integer, Rectangle> map = new LinkedHashMap<>();
+                map.put(xx, placeHolderLocations[xx]);
+                spotMap.put(map, null);
             }
         }else{
             //eastwest
@@ -64,8 +67,13 @@ class PlaceMat {
 
 
                 placeHolderLocations[xx] = new Rectangle(px,py,Card.CARDHEIGHT,Card.CARDWIDTH);
+                LinkedHashMap map = new LinkedHashMap<>();
+                map.put(xx, placeHolderLocations[xx]);
+                spotMap.put(map, null);
             }
         }
+        
+        
     }
     public int getX() {
         return this.x;
@@ -94,94 +102,133 @@ class PlaceMat {
     public void addPlayer(Player player){
         this.player = player;
         initiateMat(player.getNorthsouth());
+        cardSync();
     }
     public Player getPlayer(){
         return this.player;
     }
+    
     public void addCard(Card card, boolean northsouth){
-        //start in middle, then split and add that way, or add from left to right
         try{
-            if(cards.size() >= 7 || card == null){
-                return;
-            }
             if(northsouth){
-                //normal orietation
-                int addx = 0;
-
-                if(cards.size() >= 1){
-                    addx = (this.x + (card.getWidth() * cards.size()));
-                }else if(cards.isEmpty()){
-                    addx = (this.x + 2);
+                
+                
+                
+                
+                for(int xx = 0; xx < cardSpot.length; xx++){
+                    //System.out.println("XX: " + xx);
+                    
+                    
+                    //printing each card in hand before add
+                    //for(int cc = 0; cc < cardSpot.length; cc++){
+                        //System.out.print("CARD " + cc + " - ");
+                        //if(cardSpot[cc] == null){
+                            //System.out.println("Null");
+                            //continue;
+                        //}
+                        //System.out.println(cardSpot[cc].toString());
+                    //}
+                    
+                    
+                    
+                    //checks if card is null at position
+                    if(cardSpot[xx] != null){
+                        continue;
+                    }
+                    
+                    //gets map of positioning
+                    
+                    for(LinkedHashMap<Integer, Rectangle> m: spotMap.keySet()){
+                        //System.out.println("SPOTMAP KEY: " + m.keySet());
+                        
+                        for(int a: m.keySet()){
+                            
+                            int num = a;
+                            
+                            if(num == xx){
+                                Rectangle position = (Rectangle) m.get(num);
+                                card.setX(position.x);
+                                card.setY(position.y);
+                                cardSpot[xx] = card;
+                                
+                                
+                                return;
+                            }
+                        }
+                        return;
+                    }
                 }
-
-                int addy = (this.y + (this.height)/2) - (card.getHeight()/2);
-
-                card.setX(addx);
-                card.setY(addy);
-                cards.add(card);
+                //normal orietation
+               
 
             }else{
                 int temp = card.getWidth();
                 card.setWidth(card.getHeight());
                 card.setHeight(temp);
-
-                int addy = 0;
-
-                if(cards.size() >= 1){
-                    addy = (this.y + (card.getHeight() * cards.size()));
-                }else if(cards.isEmpty()){
-                    addy = (this.y + 2);
+                
+                for(int xx = 0; xx < placeHolderLocations.length; xx++){
+                    if(cardSpot[xx] != null){
+                        continue;
+                    }
+                    card.setX(placeHolderLocations[xx].x);
+                    card.setY(placeHolderLocations[xx].y);
+                    cardSpot[xx] = card;
                 }
-
-                int addx = (this.x + (this.width)/2) - (card.getWidth()/2);
-
-                card.setX(addx);
-                card.setY(addy);
-                cards.add(card);
+                
             }
             
             
         }catch(Exception ex){
+            System.out.println("No More Cards " + ex);
+        }
+        
+        for(Map m: spotMap.keySet()){
+            //System.out.println("KEY: " + m.toString() + " ");
             
-            System.out.println("No More Cards");
+            for(Card c: spotMap.values()){
+                //System.out.println("CARD: " + c.toString());
+            }
         }
         
         
-        
 
     }
+    
     public void clearMat(){
         cards.clear();
+        for(Card card: cardSpot){
+            card = null;
+        }
     }
 
+    public synchronized void cardSync(){
+        new Thread(new Runnable(){
 
-    public synchronized void syncCards(){
-        //new Thread(new Runnable(){
+            @Override
+            public void run(){
+                while(player != null){
+                    try{
+                        clearMat(); 
+                        if(!player.getCardsInHand().isEmpty()){
 
-            //@Override
-            //public void run(){
-                //while(true){
+                            Iterator<Card> handIter = player.getCardsInHand().iterator();
+                            while(handIter.hasNext()){
+                                Card card = handIter.next();
+                                addCard(card,player.getNorthsouth());
+                            }
+                        }else{
 
-                    if(player == null){
-                        return;
+                        }
+                    }catch(Exception ex){
+                        System.out.println(ex);
                     }
                     
-                    if(!player.getCardsInHand().isEmpty()){
-                        
-                        Iterator<Card> handIter = player.getCardsInHand().iterator();
-                        while(handIter.hasNext()){
-                            Card card = handIter.next();
-                            addCard(card,player.getNorthsouth());
-                        }
-                    }else{
-                        //if(!cards.isEmpty())
-                        clearMat();
-                    }
-                //}
-            //}
-        //}).start();
+                }
+            }
+        }).start();
 
     }
+    
     public synchronized void draw(Graphics2D g2){
         g2.setColor(Color.green);
         g2.fillRect(this.x, this.y, this.width, this.height);
@@ -202,7 +249,11 @@ class PlaceMat {
                 Card card = cardIter.next();
                 card.draw(g2);
             }
-            
+            Iterator<Card> removedIter = player.getRemoved().iterator();
+            while(removedIter.hasNext()){
+                Card card = removedIter.next();
+                card.draw(g2);
+            }
         }
         
     }

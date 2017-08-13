@@ -1,6 +1,7 @@
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Random;
 
 class CardDeck {
     private int numofdecks;
-    final private ArrayList<Card> cards;
+    private ArrayList<Card> cards;
     final private List<Card> dealtCards;
     
     final private CardValues values;
@@ -17,9 +18,9 @@ class CardDeck {
     private int x,y,width,height;
     
     class CardValues{
-        private final String[] values = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+        private final Object[] values = {2,3,4,5,6,7,8,9,10,"J","Q","K","A"};
         
-        public String[] getValues(){
+        public Object[] getValues(){
             return values;
         }
     }
@@ -37,6 +38,15 @@ class CardDeck {
     private void addCardToDeck(Card card){
         cards.add(card);
     }
+    
+    public void putDeckInOrder(Card[] cards){
+        if(cards.length < 52){
+            //maybe return;
+        }
+        for(Card card: cards){
+            addCardToDeck(card);
+        }
+    }
     public void collectDeck(){
         cards.addAll(dealtCards);
         dealtCards.clear();
@@ -45,17 +55,17 @@ class CardDeck {
         //System.out.println("Cards size " + cards.size());
         collectDeck();
         cards.clear();
-        System.out.println("Cards size " + cards.size());
+        //System.out.println("Cards size " + cards.size());
         
         numofdecks = num;
         for(int xx = 0; xx < num; xx++){
             for(CardSuit suit: suits){
-                for(String value: values.getValues()){
+                for(Object value: values.getValues()){
                     addCardToDeck(new Card(value,suit));
                 }
             }
         }
-        System.out.println("Cards size " + cards.size());
+        //System.out.println("Cards size " + cards.size());
         
     }
     public void shuffleDeck(){
@@ -131,12 +141,15 @@ class CardDeck {
     
     public static void main(String[] args){
         CardDeck cd = new CardDeck();
+        Card a = new Card("A", new Spade());
+        Card b = new Card(2, new Spade());
         
         System.out.println(cd.toString());
-        cd.makeDeck(2);
+        cd.addCardToDeck(a);
+        cd.addCardToDeck(b);
         System.out.println(cd.toString());
-        cd.shuffleDeck();
-        System.out.println(cd.toString());
+        
+        System.out.println(Card.compareSuits(a, b).toString());
         
     }
 }

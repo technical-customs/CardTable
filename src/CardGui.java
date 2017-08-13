@@ -31,13 +31,13 @@ class CardGui extends JPanel{
     public Card testcard2 = new Card("K", new Spade());
     public Card testcard3 = new Card("Q", new Spade());
     public Card testcard4 = new Card("J", new Spade());
-    public Card testcard5 = new Card("10", new Spade());
-    public Card testcard6 = new Card("9", new Spade());
-    public Card testcard7 = new Card("8", new Spade());
+    public Card testcard5 = new Card(10, new Spade());
+    public Card testcard6 = new Card(9, new Spade());
+    public Card testcard7 = new Card(8, new Spade());
     
     
-    private CardDeck deck;
-    private List<Card> played;
+    private volatile CardDeck deck;
+    private volatile List<Card> played;
     private TableTop tt;
     private PlaceMat north;
     private PlaceMat south;
@@ -132,10 +132,10 @@ class CardGui extends JPanel{
         //new Thread(new Runnable(){
             //@Override
             //public void run(){
-                north.syncCards();
-                south.syncCards();
-                east.syncCards();
-                west.syncCards();
+                //north.syncCards();
+                //south.syncCards();
+                //east.syncCards();
+                //west.syncCards();
             //}
         //}).start();
         
@@ -200,13 +200,20 @@ class CardGui extends JPanel{
         if(deck != null){
             deck.draw(g2);
         }
-        if(!played.isEmpty()){
+        //if(!played.isEmpty()){
+        try{
             Iterator<Card> cardIter = played.iterator();
             while(cardIter.hasNext()){
+                
                 Card card = cardIter.next();
                 card.draw(g2);
             }
+        }catch(Exception ex){
+            System.out.println("Played iter " + ex);
+            //played.clear();
         }
+            
+        //}
         //mat north
         north.draw(g2);
         //north.syncCards();

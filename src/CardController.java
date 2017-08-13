@@ -24,8 +24,9 @@ class CardController{
             public void run(){
                 while(true){
                     try{
-                        gui.syncMats();
                         gui.getPlayed().addAll(model.getCardsPlayed());
+                        gui.syncMats();
+                        //System.out.println("Removed: " + model.getCardsPlayed().toString());
                         Thread.sleep(1000);
                         
                     }catch(Exception ex){

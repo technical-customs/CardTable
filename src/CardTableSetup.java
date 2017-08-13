@@ -6,6 +6,5 @@ class CardTableSetup{
         CardGui gui = new CardGui();
         CardController controller = new CardController(model, gui);
         
-        
     }
 }

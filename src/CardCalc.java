@@ -134,10 +134,12 @@ class CardCalc {
                 }
                 
                 if(player.removeCard(card)){
+                    player.getRemoved().clear();
+                    
                     cardsPlayed.add(card);
                     cardsInPlay.remove(card);
                     
-                    System.out.println("Collected: " + cardsPlayed);
+                    //System.out.println("Collected: " + cardsPlayed);
                 }
             }
         }catch(Exception ex){
@@ -153,7 +155,7 @@ class CardCalc {
                 Card card = cardIter.next();
                 
                 if(card.getHighlight()){
-                    System.out.println("HIGHLIGHTED: " + card.toString());
+                    //System.out.println("HIGHLIGHTED: " + card.toString());
                     highlighted.add(card);
                 }
             }
@@ -161,7 +163,7 @@ class CardCalc {
             for(Card card: highlighted){
                 collectCard(card);
             }
-            System.out.println("Highlighted: " + highlighted.toString());
+            //System.out.println("Highlighted: " + highlighted.toString());
         }catch(Exception ex){
             System.out.println("Collect Highlight ex: " + ex);
             
@@ -181,9 +183,9 @@ class CardCalc {
     
     @Override
     public String toString(){
-        System.out.println("Cards in play: " + getCardsInPlay().toString());
-        System.out.println("In Deck: " + calcDeck().toString());
-        System.out.println("Cards Played: " + getCardsPlayed().toString());
+        //System.out.println("Cards in play: " + getCardsInPlay().toString());
+        //System.out.println("In Deck: " + calcDeck().toString());
+        //System.out.println("Cards Played: " + getCardsPlayed().toString());
         
         for(Player player: players){
             if(player == null){
@@ -199,6 +201,8 @@ class CardCalc {
         cc.getDeck().makeDeck(1);
         cc.getDeck().shuffleDeck();
         
+        
+        /*
         cc.addPlayer("Joe");
         cc.addPlayer("Chris");
         cc.addPlayer("Steve");
@@ -256,5 +260,6 @@ class CardCalc {
         }
         cc.recollectDeck();
         System.out.println("In Deck: " + cc.calcDeck().toString());
+        */
     }
 }

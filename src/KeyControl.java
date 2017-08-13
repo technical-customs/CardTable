@@ -4,6 +4,14 @@ import java.awt.event.KeyEvent;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 
+/**
+ * 
+ * @author techcust
+ * 
+ * A - Add player, upto 4
+ * N - New Deck
+ * 
+ */
 class KeyControl extends KeyAdapter{
     private CardCalc model;
     private CardGui gui;
@@ -20,7 +28,7 @@ class KeyControl extends KeyAdapter{
             if(model.getPlayers()[0] == null){
                 Player player = model.addPlayer("Player North");
                 player.setNorthsouth(true);
-                System.out.println("Add Player North");
+                //System.out.println("Add Player North");
                 
                 player.setX(gui.getNorthMat().getX());
                 player.setY(gui.getNorthMat().getY());
@@ -30,7 +38,7 @@ class KeyControl extends KeyAdapter{
             }else if(model.getPlayers()[1] == null){
                 Player player = model.addPlayer("Player South");
                 player.setNorthsouth(true);
-                System.out.println("Add Player South");
+                //System.out.println("Add Player South");
                 
                 player.setX(gui.getSouthMat().getX());
                 player.setY(gui.getSouthMat().getY());
@@ -39,7 +47,7 @@ class KeyControl extends KeyAdapter{
             }else if(model.getPlayers()[2] == null){
                 Player player = model.addPlayer("Player East");
                 player.setNorthsouth(false);
-                System.out.println("Add Player East");
+                //System.out.println("Add Player East");
                 
                 player.setX(gui.getEastMat().getX());
                 player.setY(gui.getEastMat().getY());
@@ -48,7 +56,7 @@ class KeyControl extends KeyAdapter{
             }else if(model.getPlayers()[3] == null){
                 Player player = model.addPlayer("Player West");
                 player.setNorthsouth(false);
-                System.out.println("Add Player West");
+                //System.out.println("Add Player West");
                 
                 player.setX(gui.getWestMat().getX());
                 player.setY(gui.getWestMat().getY());
@@ -58,7 +66,7 @@ class KeyControl extends KeyAdapter{
         }
         
         if(keyCode == KeyEvent.VK_N){
-            System.out.println("Make new deck");
+            //System.out.println("Make new deck");
             try{
                 model.recollectDeck();
             }catch(Exception ex){
@@ -71,7 +79,7 @@ class KeyControl extends KeyAdapter{
             
         }
         if(keyCode == KeyEvent.VK_D){
-            System.out.println("Deal cards");
+            //System.out.println("Deal cards");
             int choice = 0;
             do{
                 String sc = (JOptionPane.showInputDialog(null, "How Many Cards To Deal (1-7)?","Card Deal", JOptionPane.PLAIN_MESSAGE));
@@ -87,11 +95,11 @@ class KeyControl extends KeyAdapter{
             }while(choice < 1 || choice > 7);
             
             model.dealCards(choice);
-            gui.syncMats();
-            System.out.println(model.toString());
+            //syncCards();
+            //System.out.println(model.toString());
         }
         if(keyCode == KeyEvent.VK_S){
-            System.out.println("Show cards");
+            //System.out.println("Show cards");
             
             Iterator<Card> cardIter = model.getCardsInPlay().iterator();
             while(cardIter.hasNext()){
@@ -117,12 +125,13 @@ class KeyControl extends KeyAdapter{
             //    card.setX(gui.getTableTop().getPlayedPlaceHolderLocation().x);
             //    card.setY(gui.getTableTop().getPlayedPlaceHolderLocation().y);
             //}
-            
+            //syncCards();
         }
         if(keyCode == KeyEvent.VK_C){
             System.out.println("Collect cards");
             
             model.collectHighlightedCard();
+            //syncCards();
             //gui.getPlayed().addAll(model.getCardsPlayed());
             
         }
@@ -130,5 +139,22 @@ class KeyControl extends KeyAdapter{
     }
     
     
-    
+    private void asyncCards(){
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                //while(true){
+                    try{
+                        gui.getPlayed().addAll(model.getCardsPlayed());
+                        gui.syncMats();
+                        //System.out.println("Removed: " + model.getCardsPlayed().toString());
+                        Thread.sleep(1000);
+                        
+                    }catch(Exception ex){
+                        
+                    }
+                //}
+            }
+        }).start();
+    }
 }

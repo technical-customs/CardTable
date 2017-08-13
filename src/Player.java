@@ -8,6 +8,7 @@ import java.util.List;
 class Player{
     private String name;
     final private List<Card> cardsInHand = new ArrayList<>();
+    final private List<Card> removed = new ArrayList<>();
     private boolean northsouth = true;
     
     private int x, y, width = 20, height = 20;
@@ -61,6 +62,10 @@ class Player{
     public List<Card> getCardsInHand(){
         return this.cardsInHand;
     }
+    public List<Card> getRemoved(){
+        return this.removed;
+    }
+    
     public boolean removeCard(Card card){
         Iterator<Card> cardIter = cardsInHand.iterator();
         while(cardIter.hasNext()){
@@ -69,13 +74,14 @@ class Player{
             if(c.equals(card)){
                 
                 cardIter.remove();
-                return true;
+                return removed.add(c);
             }
         }
         return false;
     }
     public void clearHand(){
         this.cardsInHand.clear();
+        //this.removed.clear();
     }
     
     public void draw(Graphics2D g2){

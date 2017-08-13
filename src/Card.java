@@ -9,13 +9,13 @@ class Card{
     final public static int CARDWIDTH = 25, CARDHEIGHT = 30;
     final private Rectangle cardRect;
     final private CardSuit suit;
-    final private String value;
+    final private Object value;
     private boolean show = false;
     private boolean highlight = false;
 
     private int x=0,y=0,width=25,height=30;
 
-    public Card(String value, CardSuit suit){
+    public Card(Object value, CardSuit suit){
         this.value = value;
         this.suit = suit;
         cardRect = new Rectangle(this.x,this.y,this.width,this.height);
@@ -25,7 +25,7 @@ class Card{
     public Rectangle getCardRect(){
         return cardRect;
     }
-    public String getValue(){
+    public Object getValue(){
         return this.value;
     }
     public CardSuit getSuit(){
@@ -143,5 +143,119 @@ class Card{
         hash = 89 * hash + this.width;
         hash = 89 * hash + this.height;
         return hash;
+    }
+    
+    
+    public static Card compareCards(Card a, Card b){
+        //return high card
+        
+        Object aValue = a.getValue();
+        Object bValue = b.getValue();
+        
+        if(aValue.getClass().equals(Integer.class)){
+            
+            if(bValue.getClass().equals(Integer.class)){
+                if((int)aValue == (int)bValue){
+                    return null;
+                }
+                return (int)aValue > (int)bValue?a:b;
+                
+            }else if(bValue.getClass().equals(String.class)){
+                return b;
+            }
+            
+        }else if(aValue.getClass().equals(String.class)){
+            
+            if(bValue.getClass().equals(Integer.class)){
+                return a;
+            }else if(bValue.getClass().equals(String.class)){
+                String as = (String)aValue;
+                String bs = (String)bValue;
+                
+                if(as.equalsIgnoreCase("A") && bs.equalsIgnoreCase("A")){
+                   return null; 
+                }
+                if(as.equalsIgnoreCase("A") && bs.equalsIgnoreCase("K")){
+                   return a; 
+                }
+                if(as.equalsIgnoreCase("A") && bs.equalsIgnoreCase("Q")){
+                   return a; 
+                }
+                if(as.equalsIgnoreCase("A") && bs.equalsIgnoreCase("J")){
+                   return a; 
+                }
+                
+                if(as.equalsIgnoreCase("K") && bs.equalsIgnoreCase("A")){
+                   return b; 
+                }
+                if(as.equalsIgnoreCase("K") && bs.equalsIgnoreCase("K")){
+                   return null; 
+                }
+                if(as.equalsIgnoreCase("K") && bs.equalsIgnoreCase("Q")){
+                   return a; 
+                }
+                if(as.equalsIgnoreCase("K") && bs.equalsIgnoreCase("J")){
+                   return a; 
+                }
+                
+                if(as.equalsIgnoreCase("Q") && bs.equalsIgnoreCase("A")){
+                   return b; 
+                }
+                if(as.equalsIgnoreCase("Q") && bs.equalsIgnoreCase("K")){
+                   return b; 
+                }
+                if(as.equalsIgnoreCase("Q") && bs.equalsIgnoreCase("Q")){
+                   return null; 
+                }
+                if(as.equalsIgnoreCase("Q") && bs.equalsIgnoreCase("J")){
+                   return a; 
+                }
+                
+                if(as.equalsIgnoreCase("J") && bs.equalsIgnoreCase("A")){
+                   return b; 
+                }
+                if(as.equalsIgnoreCase("J") && bs.equalsIgnoreCase("K")){
+                   return b; 
+                }
+                if(as.equalsIgnoreCase("J") && bs.equalsIgnoreCase("Q")){
+                   return b; 
+                }
+                if(as.equalsIgnoreCase("J") && bs.equalsIgnoreCase("J")){
+                   return null; 
+                }
+            }
+        }
+        return null;
+    }
+    public static Card compareSuits(Card a, Card b){
+        //spades high
+        
+        
+        CardSuit aSuit = a.getSuit();
+        CardSuit bSuit = b.getSuit();
+        
+        if(aSuit.getClass().equals(Spade.class)){
+            //aSuit is spade
+            
+            if(bSuit.getClass().equals(Spade.class)){
+                //bSuit is spade, compare cards
+                return compareCards(a,b);
+            }else{
+                //bSuit is not spades
+                return a;
+            }
+        }else{
+            //aSuit is not spade
+            
+            if(bSuit.getClass().equals(Spade.class)){
+                //bSuit is spade, return b
+                return b;
+                
+            }else{
+                //bSuit is not spades, compare
+                return compareCards(a,b);
+            }
+        }
+        
     }
 }
