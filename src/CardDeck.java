@@ -17,13 +17,6 @@ class CardDeck {
     
     private int x,y,width,height;
     
-    class CardValues{
-        private final Object[] values = {2,3,4,5,6,7,8,9,10,"J","Q","K","A"};
-        
-        public Object[] getValues(){
-            return values;
-        }
-    }
     public CardDeck(){
         cards = new ArrayList<>();
         dealtCards = new ArrayList<>();
@@ -60,7 +53,7 @@ class CardDeck {
         numofdecks = num;
         for(int xx = 0; xx < num; xx++){
             for(CardSuit suit: suits){
-                for(Object value: values.getValues()){
+                for(Object value: CardValues.getValues()){
                     addCardToDeck(new Card(value,suit));
                 }
             }
@@ -141,22 +134,26 @@ class CardDeck {
     
     public static void main(String[] args){
         CardDeck cd = new CardDeck();
-        Card a = new Card(2, new Club());
-        Card b = new Card("K", new Diamond());
-        Card c = new Card("A", new Club());
-        Card d = new Card(2, new Heart());
-        Card e = new Card("A", new Spade());
-        
-        
+        cd.makeDeck(1);
         System.out.println(cd.toString());
-        cd.addCardToDeck(a);
-        cd.addCardToDeck(b);
-        cd.addCardToDeck(c);
-        cd.addCardToDeck(d);
-        cd.addCardToDeck(e);
+        cd.shuffleDeck();
         System.out.println(cd.toString());
         
-        System.out.println(Arrays.toString(PokerRules.checkForTwoPair(cd.getCards())));
+        
+        CardDeck hand1 = new CardDeck();
+        for(int x = 0; x < 5; x++){
+            hand1.addCardToDeck(cd.dealCard());
+        }
+        hand1.toString();
+        
+        CardDeck hand2 = new CardDeck();
+        for(int x = 0; x < 5; x++){
+            hand2.addCardToDeck(cd.dealCard());
+        }
+        hand2.toString();
+        
+        //System.out.println(Arrays.toString(PokerRules.checkForTwoPair(cd.getCards())));
+        //System.out.println(PokerRules.checkForRoyalFlush(cd.getCards()));
         
         
     }
