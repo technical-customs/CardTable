@@ -10,7 +10,7 @@ class PokerRules{
     }
     
     public static int checkHand(List<Card> cards){
-        if(!checkForRoyalFlush(cards)){
+        if(checkForRoyalFlush(cards)){
             
             System.out.println("ROYAL FLUSH");
             return 10;
@@ -20,13 +20,13 @@ class PokerRules{
         }else if(checkForFourOfAKind(cards) != null){
             System.out.println("FOUR OF A KIND");
             return 8;
-        }else if(!checkForFullHouse(cards)){
+        }else if(checkForFullHouse(cards)){
             System.out.println("FULL HOUSE");
             return 7;
-        }else if(!checkForFlush(cards)){
+        }else if(checkForFlush(cards)){
             System.out.println("FLUSH");
             return 6;
-        }else if(!checkForStraight(cards)){
+        }else if(checkForStraight(cards)){
             System.out.println("STRAIGHT");
             return 5;
         }else if(checkForThreeOfAKind(cards) != null){
@@ -44,7 +44,7 @@ class PokerRules{
         }
         return 0;
     }
-    public List<Card> compareHands(List<Card> cardsa, List<Card> cardsb){
+    public static List<Card> compareHands(List<Card> cardsa, List<Card> cardsb){
         return (checkHand(cardsa) > checkHand(cardsb)) ? cardsa : cardsb;
     }
     
@@ -122,30 +122,20 @@ class PokerRules{
         return true;
     }
     public static boolean checkForStraight(List<Card> cards){
-        Object[] lowSt = {"A",2,3,4,5};
+        List<Object> lowSt = Arrays.asList("A",2,3,4,5);
         
-        Card high = checkForHighCard(cards);
-        
-        List values = new LinkedList();
-        if(high.getValue().equals("A")){
-            int c = 0;
-            for(Card card: cards){
-                values.add(card.getValue());
-            }
-            
-            for(Object obj: lowSt){
-                if(values.contains(obj)){
-                    c++;
-                }else{
-                    break;
-                }
-            }
-            if(c == 5){
-                return true;
-            }
+        List<Object> values = new LinkedList();
+        for(Card card: cards){
+            values.add(card.getValue());
         }
         
+        if(values.containsAll(lowSt)){
+            return true;
+        }
+        
+        Card high = checkForHighCard(cards);
         int index = Integer.MAX_VALUE;
+        
         for(int x = 0; x < CardValues.getValues().length; x++){
             if(high.getValue() == CardValues.getValues()[x]){
                 index = x;
@@ -155,19 +145,11 @@ class PokerRules{
             return false;
         }
         
-        int count = 0;
+        List<Object> st = new LinkedList();
         for(int y = index; y >= index - 4; y--){
-            Object value = CardValues.getValues()[y];
-            for(Card card: cards){
-                if(card.getValue() == value){
-                    count += 1;
-                }
-            }
+            st.add(CardValues.getValues()[y]);
         }
-        if(count == 5){
-            return true;
-        }
-        return false;
+        return values.containsAll(st);
     }
     public static Card[] checkForThreeOfAKind(List<Card> cards){
         List<List<Card>> lcards = new LinkedList<>();

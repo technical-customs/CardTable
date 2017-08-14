@@ -53,7 +53,7 @@ class CardDeck {
         numofdecks = num;
         for(int xx = 0; xx < num; xx++){
             for(CardSuit suit: suits){
-                for(Object value: CardValues.getValues()){
+                for(Object value: values.getValues()){
                     addCardToDeck(new Card(value,suit));
                 }
             }
@@ -134,26 +134,23 @@ class CardDeck {
     
     public static void main(String[] args){
         CardDeck cd = new CardDeck();
-        cd.makeDeck(1);
+        Card a = new Card("A", new Spade());
+        Card b = new Card("K", new Spade());
+        Card c = new Card("Q", new Spade());
+        Card d = new Card(9, new Spade());
+        Card e = new Card(9, new Heart());
+        
+        
         System.out.println(cd.toString());
-        cd.shuffleDeck();
+        cd.addCardToDeck(a);
+        cd.addCardToDeck(b);
+        cd.addCardToDeck(c);
+        cd.addCardToDeck(d);
+        cd.addCardToDeck(e);
         System.out.println(cd.toString());
-        
-        
-        CardDeck hand1 = new CardDeck();
-        for(int x = 0; x < 5; x++){
-            hand1.addCardToDeck(cd.dealCard());
-        }
-        hand1.toString();
-        
-        CardDeck hand2 = new CardDeck();
-        for(int x = 0; x < 5; x++){
-            hand2.addCardToDeck(cd.dealCard());
-        }
-        hand2.toString();
         
         //System.out.println(Arrays.toString(PokerRules.checkForTwoPair(cd.getCards())));
-        //System.out.println(PokerRules.checkForRoyalFlush(cd.getCards()));
+        System.out.println(PokerRules.checkHand(cd.getCards()));
         
         
     }
