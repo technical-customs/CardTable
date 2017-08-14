@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.List;
 import java.util.Objects;
 
 class Card{
@@ -12,7 +13,7 @@ class Card{
     final private Object value;
     private boolean show = false;
     private boolean highlight = false;
-
+    
     private int x=0,y=0,width=25,height=30;
 
     public Card(Object value, CardSuit suit){
@@ -145,7 +146,30 @@ class Card{
         return hash;
     }
     
-    
+    public static Card compareCards(List<Card> cards){
+        //get high card
+        
+        if(cards.size() <= 0){
+            return null;
+        }
+        if(cards.size() == 1){
+            return cards.get(0);
+        }
+        if(cards.size() == 2){
+            return compareCards(cards.get(0), cards.get(1));
+        }
+        
+        Card high = null;
+        
+        for(Card card: cards){
+            if(high == null){
+                high = card;
+                continue;
+            }
+            high = compareCards(high, card);
+        }
+        return high;
+    }
     public static Card compareCards(Card a, Card b){
         //return high card
         
@@ -156,7 +180,7 @@ class Card{
             
             if(bValue.getClass().equals(Integer.class)){
                 if((int)aValue == (int)bValue){
-                    return null;
+                    return a;
                 }
                 return (int)aValue > (int)bValue?a:b;
                 
@@ -173,7 +197,7 @@ class Card{
                 String bs = (String)bValue;
                 
                 if(as.equalsIgnoreCase("A") && bs.equalsIgnoreCase("A")){
-                   return null; 
+                   return a; 
                 }
                 if(as.equalsIgnoreCase("A") && bs.equalsIgnoreCase("K")){
                    return a; 
@@ -189,7 +213,7 @@ class Card{
                    return b; 
                 }
                 if(as.equalsIgnoreCase("K") && bs.equalsIgnoreCase("K")){
-                   return null; 
+                   return a; 
                 }
                 if(as.equalsIgnoreCase("K") && bs.equalsIgnoreCase("Q")){
                    return a; 
@@ -205,7 +229,7 @@ class Card{
                    return b; 
                 }
                 if(as.equalsIgnoreCase("Q") && bs.equalsIgnoreCase("Q")){
-                   return null; 
+                   return a; 
                 }
                 if(as.equalsIgnoreCase("Q") && bs.equalsIgnoreCase("J")){
                    return a; 
@@ -221,7 +245,7 @@ class Card{
                    return b; 
                 }
                 if(as.equalsIgnoreCase("J") && bs.equalsIgnoreCase("J")){
-                   return null; 
+                   return a; 
                 }
             }
         }

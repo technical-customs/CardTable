@@ -141,15 +141,23 @@ class CardDeck {
     
     public static void main(String[] args){
         CardDeck cd = new CardDeck();
-        Card a = new Card("A", new Spade());
-        Card b = new Card(2, new Spade());
+        Card a = new Card(2, new Club());
+        Card b = new Card("K", new Diamond());
+        Card c = new Card("A", new Club());
+        Card d = new Card(2, new Heart());
+        Card e = new Card("A", new Spade());
+        
         
         System.out.println(cd.toString());
         cd.addCardToDeck(a);
         cd.addCardToDeck(b);
+        cd.addCardToDeck(c);
+        cd.addCardToDeck(d);
+        cd.addCardToDeck(e);
         System.out.println(cd.toString());
         
-        System.out.println(Card.compareSuits(a, b).toString());
+        System.out.println(Arrays.toString(PokerRules.checkForTwoPair(cd.getCards())));
+        
         
     }
 }
