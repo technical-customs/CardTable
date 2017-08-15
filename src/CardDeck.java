@@ -200,7 +200,7 @@ class CardDeck {
         System.out.println();
         
         for(Player player: players){
-            if(player.getPoints() >= 50){
+            if(player.getPoints() >= 100){
                 winner = player;
             }
         }

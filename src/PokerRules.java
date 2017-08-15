@@ -127,6 +127,7 @@ class PokerRules{
                     if(tie){
                         if(highHand.containsAll(tieHand)){
                             //tiehand(high hand still on top)
+                            return null;
                         }else{
                             //other beat original ties
                             tie = false;
