@@ -1,13 +1,11 @@
 
+import display.LoggerDisplay;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 class CardDeck {
     private int numofdecks;
     private ArrayList<Card> cards;
@@ -126,7 +124,11 @@ class CardDeck {
         return "Cards: " + cards.toString();
     }
     
+    
     public static void main(String[] args) throws InterruptedException{
+        LoggerDisplay ld = new LoggerDisplay();
+        ld.setTitle("Cards");
+        
         List<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -163,11 +165,11 @@ class CardDeck {
         playerCards.add(p3.getCardsInHand());
         playerCards.add(p4.getCardsInHand());
         
-        System.out.println(p1.toString());
-        System.out.println(p2.toString());
-        System.out.println(p3.toString());
-        System.out.println(p4.toString());
-        System.out.println();
+        ld.writeToDisplay(p1.toString());
+        ld.writeToDisplay(p2.toString());
+        ld.writeToDisplay(p3.toString());
+        ld.writeToDisplay(p4.toString());
+        ld.writeToDisplay("\n");
         Thread.sleep(1000);
         List<Card> comphands = null;
         try{
@@ -177,27 +179,26 @@ class CardDeck {
         
         
         if(comphands == null){
-           System.out.println("Tie");
+           ld.writeToDisplay("Tie");
         }else if(p1.getCardsInHand().containsAll(comphands)){
-            System.out.println("Winner is " + p1.getName() + " - " + PokerRules.getHandValue(p1.getCardsInHand()));
+            ld.writeToDisplay("Winner is " + p1.getName() + " - " + PokerRules.getHandValue(p1.getCardsInHand()));
             p1.setPoints(p1.getPoints()+ PokerRules.checkHand(p1.getCardsInHand()).getA());
-            System.out.println(p1.getName() + " Points:" + p1.getPoints());
+            ld.writeToDisplay(p1.getName() + " Points:" + p1.getPoints());
         }else if(p2.getCardsInHand().containsAll(comphands)){
-            System.out.println("Winner is " + p2.getName() + " - " + PokerRules.getHandValue(p2.getCardsInHand()));
+            ld.writeToDisplay("Winner is " + p2.getName() + " - " + PokerRules.getHandValue(p2.getCardsInHand()));
             p2.setPoints(p2.getPoints()+ PokerRules.checkHand(p2.getCardsInHand()).getA());
-            System.out.println(p2.getName() + " Points:" + p2.getPoints());
+            ld.writeToDisplay(p2.getName() + " Points:" + p2.getPoints());
         }else if(p3.getCardsInHand().containsAll(comphands)){
-            System.out.println("Winner is " + p3.getName() + " - " + PokerRules.getHandValue(p3.getCardsInHand()));
+            ld.writeToDisplay("Winner is " + p3.getName() + " - " + PokerRules.getHandValue(p3.getCardsInHand()));
             p3.setPoints(p3.getPoints()+ PokerRules.checkHand(p3.getCardsInHand()).getA());
-            System.out.println(p3.getName() + " Points:" + p3.getPoints());
+            ld.writeToDisplay(p3.getName() + " Points:" + p3.getPoints());
         }else if(p4.getCardsInHand().containsAll(comphands)){
-            System.out.println("Winner is " + p4.getName() + " - " + PokerRules.getHandValue(p4.getCardsInHand()));
+            ld.writeToDisplay("Winner is " + p4.getName() + " - " + PokerRules.getHandValue(p4.getCardsInHand()));
             p4.setPoints(p4.getPoints()+ PokerRules.checkHand(p4.getCardsInHand()).getA());
-            System.out.println(p4.getName() + " Points:" + p4.getPoints());
+            ld.writeToDisplay(p4.getName() + " Points:" + p4.getPoints());
         }
         
-        System.out.println();
-        System.out.println();
+        ld.writeToDisplay("\n");
         
         for(Player player: players){
             if(player.getPoints() >= 100){
@@ -206,15 +207,15 @@ class CardDeck {
         }
         
         }
-        System.out.println("WINNER OF POKER: " + winner.getName() + " Points:" + winner.getPoints());
-        System.out.println();
-        System.out.println("RUNNER UPS: ");
+        ld.writeToDisplay("WINNER OF POKER: " + winner.getName() + " Points:" + winner.getPoints());
+        ld.writeToDisplay("\n");
+        ld.writeToDisplay("RUNNER UPS: ");
         
         for(Player player: players){
             if(player.equals(winner)){
                 continue;
             }
-            System.out.println(player.getName() + " Points:" + player.getPoints());
+            ld.writeToDisplay(player.getName() + " Points:" + player.getPoints());
         }
         
     }
