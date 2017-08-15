@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class CardDeck {
     private int numofdecks;
@@ -33,9 +34,6 @@ class CardDeck {
     }
     
     public void putDeckInOrder(Card[] cards){
-        if(cards.length < 52){
-            //maybe return;
-        }
         for(Card card: cards){
             addCardToDeck(card);
         }
@@ -90,28 +88,24 @@ class CardDeck {
     public void setX(int x) {
         this.x = x;
     }
-
     public int getY() {
         return y;
     }
     public void setY(int y) {
         this.y = y;
     }
-
     public int getWidth() {
         return width;
     }
     public void setWidth(int width) {
         this.width = width;
     }
-
     public int getHeight() {
         return height;
     }
     public void setHeight(int height) {
         this.height = height;
     }
-    
     public synchronized void draw(Graphics2D g2){
         //draws the back of card
         if(!cards.isEmpty()){
@@ -132,26 +126,72 @@ class CardDeck {
         return "Cards: " + cards.toString();
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException{
+        Player p1 = new Player("P1");
+        Player p2 = new Player("P2");
+        Player p3 = new Player("P3");
+        Player p4 = new Player("P4");
+        
+        List<List<Card>> playerCards = new ArrayList();
+
         CardDeck cd = new CardDeck();
-        Card a = new Card("A", new Spade());
-        Card b = new Card("K", new Spade());
-        Card c = new Card("Q", new Spade());
-        Card d = new Card(9, new Spade());
-        Card e = new Card(9, new Heart());
+        cd.makeDeck(1);
+        cd.shuffleDeck();
         
+        for(int x = 0; x < 5; x++){
+            
+            p1.addCardToHand(cd.dealCard());
+            System.out.println(p1.toString());
+            Thread.sleep(1000);
+            p2.addCardToHand(cd.dealCard());
+            System.out.println(p2.toString());
+            Thread.sleep(1000);
+            p3.addCardToHand(cd.dealCard());
+            System.out.println(p3.toString());
+            Thread.sleep(1000);
+            p4.addCardToHand(cd.dealCard());
+            System.out.println(p4.toString());
+            Thread.sleep(1000);
+            System.out.println();
+            Thread.sleep(1000);
+            
+        }
+        playerCards.add(p1.getCardsInHand());
+        playerCards.add(p2.getCardsInHand());
+        playerCards.add(p3.getCardsInHand());
+        playerCards.add(p4.getCardsInHand());
         
-        System.out.println(cd.toString());
-        cd.addCardToDeck(a);
-        cd.addCardToDeck(b);
-        cd.addCardToDeck(c);
-        cd.addCardToDeck(d);
-        cd.addCardToDeck(e);
-        System.out.println(cd.toString());
+        //System.out.println(p1.toString());
+        //System.out.println(p2.toString());
+        //System.out.println(p3.toString());
+        //System.out.println(p4.toString());
         
-        //System.out.println(Arrays.toString(PokerRules.checkForTwoPair(cd.getCards())));
-        System.out.println(PokerRules.checkHand(cd.getCards()));
+        List<Card> comphands = Arrays.asList(PokerRules.compareHands(playerCards));
         
-        
+        if(comphands == null){
+           System.out.println("Tie - ");
+           
+           
+           System.out.println(p1.getName() + " - " + PokerRules.getHandValue(p1.getCardsInHand()));
+           System.out.println(p2.getName() + " - " + PokerRules.getHandValue(p2.getCardsInHand()));
+           System.out.println(p3.getName() + " - " + PokerRules.getHandValue(p3.getCardsInHand()));
+           System.out.println(p4.getName() + " - " + PokerRules.getHandValue(p4.getCardsInHand()));
+        }else if(p1.getCardsInHand().containsAll(comphands)){
+            System.out.println("Winner is " + p1.getName() + " - " + PokerRules.getHandValue(p1.getCardsInHand()));
+            p1.setPoints(p1.getPoints()+ PokerRules.checkHand(p1.getCardsInHand()).getA());
+            System.out.println(p1.getName() + " Points:" + p1.getPoints());
+        }else if(p2.getCardsInHand().containsAll(comphands)){
+            System.out.println("Winner is " + p2.getName() + " - " + PokerRules.getHandValue(p2.getCardsInHand()));
+            p2.setPoints(p2.getPoints()+ PokerRules.checkHand(p2.getCardsInHand()).getA());
+            System.out.println(p2.getName() + " Points:" + p2.getPoints());
+        }else if(p3.getCardsInHand().containsAll(comphands)){
+            System.out.println("Winner is " + p3.getName() + " - " + PokerRules.getHandValue(p3.getCardsInHand()));
+            p3.setPoints(p3.getPoints()+ PokerRules.checkHand(p3.getCardsInHand()).getA());
+            System.out.println(p3.getName() + " Points:" + p3.getPoints());
+        }else if(p4.getCardsInHand().containsAll(comphands)){
+            System.out.println("Winner is " + p4.getName() + " - " + PokerRules.getHandValue(p4.getCardsInHand()));
+            p4.setPoints(p4.getPoints()+ PokerRules.checkHand(p4.getCardsInHand()).getA());
+            System.out.println(p4.getName() + " Points:" + p4.getPoints());
+        }
     }
 }

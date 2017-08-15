@@ -106,7 +106,7 @@ class PokerRules{
         }
         return null;
     }
-    public static List<Card> compareHands(List<List<Card>> list){
+    public static Card[] compareHands(List<List<Card>> list){
         List<Card> highHand = null;
         
         for(List<Card> listItem: list){
@@ -115,8 +115,15 @@ class PokerRules{
                 continue;
             }
             highHand = compareHands(highHand, listItem);
+            
+            
         }
-        return highHand;
+        if(highHand == null){
+            return new Card[]{};
+        }
+        Card[] cc = new Card[highHand.size()];
+        cc = highHand.toArray(cc);
+        return cc;
     }
     
     public static Card[] checkForRoyalFlush(List<Card> cards){

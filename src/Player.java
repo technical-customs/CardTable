@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 class Player{
+    private int points;
     private String name;
     final private List<Card> cardsInHand = new ArrayList<>();
     final private List<Card> removed = new ArrayList<>();
@@ -55,6 +56,12 @@ class Player{
     }
     public String getName(){
         return this.name;
+    }
+     public void setPoints(int points){
+        this.points = points;
+    }
+    public int getPoints(){
+        return this.points;
     }
 
     public void addCardToHand(Card card){
