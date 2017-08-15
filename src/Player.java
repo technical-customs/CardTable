@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 class Player{
     private int points;
@@ -101,5 +102,37 @@ class Player{
     @Override
     public String toString(){
         return name + " - Cards: " + cardsInHand.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.points;
+        hash = 79 * hash + Objects.hashCode(this.name);
+        hash = 79 * hash + Objects.hashCode(this.cardsInHand);
+        return hash;
+    }
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+        if (!Player.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Player other = (Player) obj;
+        if( this.getPoints() != other.getPoints()) {
+            return false;
+        }
+        if( !this.getName().equalsIgnoreCase(other.getName())) {
+            return false;
+        }
+        if( !this.getCardsInHand().containsAll(other.getCardsInHand())) {
+            return false;
+        }
+        if( this.getPoints() != other.getPoints()) {
+            return false;
+        }
+        return true;
     }
 }

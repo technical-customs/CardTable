@@ -148,37 +148,33 @@ class CardDeck {
         for(Player player: players){
             player.clearHand();
         }
+        playerCards.clear();
         cd.collectDeck();
-        
+        Thread.sleep(1000);
         for(int x = 0; x < 5; x++){
             
             p1.addCardToHand(cd.dealCard());
-            System.out.println(p1.toString());
-            Thread.sleep(500);
             p2.addCardToHand(cd.dealCard());
-            System.out.println(p2.toString());
-            Thread.sleep(500);
             p3.addCardToHand(cd.dealCard());
-            System.out.println(p3.toString());
-            Thread.sleep(500);
             p4.addCardToHand(cd.dealCard());
-            System.out.println(p4.toString());
-            Thread.sleep(500);
-            System.out.println();
-            Thread.sleep(500);
-            
         }
         playerCards.add(p1.getCardsInHand());
         playerCards.add(p2.getCardsInHand());
         playerCards.add(p3.getCardsInHand());
         playerCards.add(p4.getCardsInHand());
         
-        //System.out.println(p1.toString());
-        //System.out.println(p2.toString());
-        //System.out.println(p3.toString());
-        //System.out.println(p4.toString());
+        System.out.println(p1.toString());
+        System.out.println(p2.toString());
+        System.out.println(p3.toString());
+        System.out.println(p4.toString());
+        System.out.println();
+        Thread.sleep(1000);
+        List<Card> comphands = null;
+        try{
+            
+            comphands = Arrays.asList(PokerRules.compareHands(playerCards));
+        }catch(Exception ex){ continue;}
         
-        List<Card> comphands = Arrays.asList(PokerRules.compareHands(playerCards));
         
         if(comphands == null){
            System.out.println("Tie");
@@ -211,6 +207,15 @@ class CardDeck {
         
         }
         System.out.println("WINNER OF POKER: " + winner.getName() + " Points:" + winner.getPoints());
+        System.out.println();
+        System.out.println("RUNNER UPS: ");
+        
+        for(Player player: players){
+            if(player.equals(winner)){
+                continue;
+            }
+            System.out.println(player.getName() + " Points:" + player.getPoints());
+        }
         
     }
 }

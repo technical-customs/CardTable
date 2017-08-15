@@ -84,46 +84,72 @@ class PokerRules{
         }else if(checkHand(cardsa).getA() < checkHand(cardsb).getA()){
             return cardsb;
         }else if(checkHand(cardsa).getA().equals(checkHand(cardsb).getA())){
-            if(checkHand(cardsa).getA()  == 5 || checkHand(cardsa).getA()  == 9 ){
-                //either flush or straight flush
-                System.out.println("FLUSHES");
-                return null;
-            }else{
-                Card ahigh = checkForHighCard(Arrays.asList(checkHand(cardsa).getB()))[0];
-                Card bhigh = checkForHighCard(Arrays.asList(checkHand(cardsb).getB()))[0];
-                
-                if(ahigh.getValue().equals(bhigh.getValue())){
-                    return null;
-                }
-                
-                if(Card.compareCards(ahigh, bhigh).equals(ahigh)){
-                    return cardsa;
-                }
-                if(Card.compareCards(ahigh, bhigh).equals(bhigh)){
-                    return cardsb;
-                }
+            //tie
+            
+            if(checkHand(cardsa).getA()  == 5 && checkHand(cardsb).getA()  == 5 
+                    || checkHand(cardsa).getA()  == 9 && checkHand(cardsb).getA()  == 9 ){
+                //either straight or straight flush
+                System.out.println("STRAIGHTS");
             }
+            Card ahigh = checkForHighCard(Arrays.asList(checkHand(cardsa).getB()))[0];
+            Card bhigh = checkForHighCard(Arrays.asList(checkHand(cardsb).getB()))[0];
+            
+            if(ahigh.getValue().equals(bhigh.getValue())){
+                return null;
+            }
+
+            if(Card.compareCards(ahigh, bhigh).equals(ahigh)){
+                return cardsa;
+            }
+            if(Card.compareCards(ahigh, bhigh).equals(bhigh)){
+                return cardsb;
+            }
+            
         }
         return null;
     }
+    
     public static Card[] compareHands(List<List<Card>> list){
         List<Card> highHand = null;
+        
         boolean tie = false;
-        for(List<Card> listItem: list){
-            if(highHand == null){
-                highHand = listItem;
-                continue;
-            }
-            highHand = compareHands(highHand, listItem);
+        List<Card> tieHand = null;
+        
+        for(int x = 0; x < list.size(); x++){
+            int y = x+1;
             
             if(highHand == null){
-                tie = true;
-                highHand = listItem;
+                highHand = list.get(x);
+                continue;
             }
+                if(compareHands(highHand, list.get(x)) != null){
+                    highHand = compareHands(highHand, list.get(x));
+                    if(tie){
+                        if(highHand.containsAll(tieHand)){
+                            //tiehand(high hand still on top)
+                        }else{
+                            //other beat original ties
+                            tie = false;
+                            tieHand = null;
+                        }
+                    }
+                    
+                }else if(compareHands(highHand, list.get(x)) == null){
+                    System.out.println("Tie between hands");
+                    tie = true;
+                    
+                    if(y >= list.size()){
+                        System.out.println("BLANK1");
+                        //on last one
+                        return null;
+                    }else{
+                        System.out.println("BLANK2");
+                        tieHand = highHand;
+                    }
+                }
         }
-        if(tie){
-            return null;
-        }
+        
+        
         Card[] cc = new Card[highHand.size()];
         cc = highHand.toArray(cc);
         return cc;

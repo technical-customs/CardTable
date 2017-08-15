@@ -17,7 +17,10 @@ class CardSuit{
             return false;
         }
         final CardSuit other = (CardSuit) obj;
-        return !((this.getSuitname() == null) ? (other.getSuitname() != null) : !this.getSuitname().equalsIgnoreCase(other.getSuitname()));
+        if(!this.getSuitname().equalsIgnoreCase(other.getSuitname())){
+            return false;
+        }
+        return true;
     }
 
     @Override
