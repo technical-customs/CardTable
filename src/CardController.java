@@ -4,6 +4,8 @@ class CardController{
     final private CardGui gui;
     final private KeyControl keyControl;
     final private MouseControl mouseControl;
+    private boolean run = false;
+    
     public CardController(CardCalc model, CardGui gui){
         this.model = model;
         this.gui = gui;
@@ -14,7 +16,9 @@ class CardController{
         gui.addMouseControls(mouseControl);
         gui.setFocusable(true);
         gui.requestFocus();
-        syncCards();
+        //run = true;
+        //syncCards();
+        
     }
     
     //addCardsPlayed to the placeholder
@@ -22,7 +26,7 @@ class CardController{
         new Thread(new Runnable(){
             @Override
             public void run(){
-                while(true){
+                while(run){
                     try{
                         gui.getPlayed().addAll(model.getCardsPlayed());
                         gui.syncMats();

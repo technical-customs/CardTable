@@ -129,15 +129,15 @@ class CardGui extends JPanel{
         return west;
     }
     public void syncMats(){
-        //new Thread(new Runnable(){
-            //@Override
-            //public void run(){
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
                 //north.syncCards();
                 //south.syncCards();
                 //east.syncCards();
                 //west.syncCards();
-            //}
-        //}).start();
+            }
+        }).start();
         
     }
     @Override
@@ -149,8 +149,9 @@ class CardGui extends JPanel{
         g2.fillRect(0,0,this.getWidth(),this.getHeight());
         
         draw(g2);
-        repaint();
         g2.dispose();
+        repaint();
+        
     }
     
     class TableTop {
@@ -216,10 +217,10 @@ class CardGui extends JPanel{
         //}
         //mat north
         north.draw(g2);
-        //north.syncCards();
+        //north.cardSync();
         //mat south
         south.draw(g2);
-        //south.syncCards();
+        //south.cardSync();
         //mat east
         east.draw(g2);
         //east.syncCards();

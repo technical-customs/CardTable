@@ -1,58 +1,139 @@
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 class PokerRules{
     
-    public PokerRules(){
+    public PokerRules(){}
+    
+    public static String getHandValue(List<Card> cards){
+        int handvalue = checkHand(cards).getA();
         
-    }
-    
-    public static int checkHand(List<Card> cards){
-        if(checkForRoyalFlush(cards)){
-            
-            System.out.println("ROYAL FLUSH");
-            return 10;
-        }else if(checkForStraightFlush(cards)){
-            System.out.println("STRAIGHT FLUSH");
-            return 9;
-        }else if(checkForFourOfAKind(cards) != null){
-            System.out.println("FOUR OF A KIND");
-            return 8;
-        }else if(checkForFullHouse(cards)){
-            System.out.println("FULL HOUSE");
-            return 7;
-        }else if(checkForFlush(cards)){
-            System.out.println("FLUSH");
-            return 6;
-        }else if(checkForStraight(cards)){
-            System.out.println("STRAIGHT");
-            return 5;
-        }else if(checkForThreeOfAKind(cards) != null){
-            System.out.println("THREE OF A KIND");
-            return 4;
-        }else if(checkForTwoPair(cards) != null){
-            System.out.println("TWO PAIR");
-            return 3;
-        }else if(checkForPair(cards) != null){
-            System.out.println("PAIR");
-            return 2;
-        }else if(checkForHighCard(cards) != null){
-            System.out.println("HIGH CARD");
-            return 1;
+        if(handvalue == 1){
+            return "High Card";
         }
-        return 0;
+        if(handvalue == 2){
+            return "Pair";
+        }
+        if(handvalue == 3){
+            return "Two Pair";
+        }
+        if(handvalue == 4){
+            return "Three Of A Kind";
+        }
+        if(handvalue == 5){
+            return "Straight";
+        }
+        if(handvalue == 6){
+            return "Flush";
+        }
+        if(handvalue == 7){
+            return "Full House";
+        }
+        if(handvalue == 8){
+            return "Four Of A Kind";
+        }
+        if(handvalue == 9){
+            return "Straight Flush";
+        }
+        if(handvalue == 10){
+            return "Royal Flush";
+        }
+        return null;
     }
-    public static List<Card> compareHands(List<Card> cardsa, List<Card> cardsb){
-        return (checkHand(cardsa) > checkHand(cardsb)) ? cardsa : cardsb;
+    public static Pair<Integer,Card[]> checkHand(List<Card> cards){
+        if(checkForRoyalFlush(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(10,checkForRoyalFlush(cards));
+            return p;
+        }else if(checkForStraightFlush(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(9,checkForStraightFlush(cards));
+            return p;
+        }else if(checkForFourOfAKind(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(8,checkForFourOfAKind(cards));
+            return p;
+        }else if(checkForFullHouse(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(7,checkForFullHouse(cards));
+            return p;
+        }else if(checkForFlush(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(6,checkForFlush(cards));
+            return p;
+        }else if(checkForStraight(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(5,checkForStraight(cards));
+            return p;
+        }else if(checkForThreeOfAKind(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(4,checkForThreeOfAKind(cards));
+            return p;
+        }else if(checkForTwoPair(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(3,checkForTwoPair(cards));
+            return p;
+        }else if(checkForPair(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(2,checkForPair(cards));
+            return p;
+        }else if(checkForHighCard(cards) != null){
+            Pair<Integer,Card[]> p = new Pair<>(1,checkForHighCard(cards));
+            return p;
+        }
+        return null;
     }
     
-    public static boolean checkForRoyalFlush(List<Card> cards){
-        return (checkForHighCard(cards).getValue().equals("A") && checkForFlush(cards) && checkForStraight(cards));    
+    public static List<Card> compareHands(List<Card> cardsa, List<Card> cardsb){
+        if(checkHand(cardsa).getA() > checkHand(cardsb).getA()){
+            return cardsa;
+        }else if(checkHand(cardsa).getA() < checkHand(cardsb).getA()){
+            return cardsb;
+        }else if(checkHand(cardsa).getA().equals(checkHand(cardsb).getA())){
+            if(checkHand(cardsa).getA()  == 5 || checkHand(cardsa).getA()  == 9 ){
+                //either flush or straight flush
+                System.out.println("FLUSHES");
+                return null;
+            }else{
+                Card ahigh = checkForHighCard(Arrays.asList(checkHand(cardsa).getB()))[0];
+                Card bhigh = checkForHighCard(Arrays.asList(checkHand(cardsb).getB()))[0];
+                
+                if(ahigh.getValue().equals(bhigh.getValue())){
+                    return null;
+                }
+                
+                if(Card.compareCards(ahigh, bhigh).equals(ahigh)){
+                    return cardsa;
+                }
+                if(Card.compareCards(ahigh, bhigh).equals(bhigh)){
+                    return cardsb;
+                }
+            }
+        }
+        return null;
     }
-    public static boolean checkForStraightFlush(List<Card> cards){
-        return (checkForFlush(cards) && checkForStraight(cards));
+    public static List<Card> compareHands(List<List<Card>> list){
+        List<Card> highHand = null;
+        
+        for(List<Card> listItem: list){
+            if(highHand == null){
+                highHand = listItem;
+                continue;
+            }
+            highHand = compareHands(highHand, listItem);
+        }
+        return highHand;
+    }
+    
+    public static Card[] checkForRoyalFlush(List<Card> cards){
+        if(checkForHighCard(cards)[0].getValue().equals("A") && checkForFlush(cards) != null && checkForStraight(cards) != null){
+            Card[] cc = new Card[cards.size()];
+            cc = cards.toArray(cc);
+            return cc;
+        }
+        return null;    
+    }
+    public static Card[] checkForStraightFlush(List<Card> cards){
+        if(checkForFlush(cards) != null && checkForStraight(cards) != null){
+            Card[] cc = new Card[cards.size()];
+            cc = cards.toArray(cc);
+            return cc;
+        }
+        return null;
     }
     public static Card[] checkForFourOfAKind(List<Card> cards){
         List<List<Card>> lcards = new LinkedList<>();
@@ -82,9 +163,7 @@ class PokerRules{
             }
         }
         for(List<Card> c: lcards){
-            
             if(c.size() == 4){
-                
                 Card[] cc = new Card[c.size()];
                 cc = c.toArray(cc);
                 return  cc;
@@ -92,7 +171,7 @@ class PokerRules{
         }
         return null;
     }
-    public static boolean checkForFullHouse(List<Card> cards){
+    public static Card[] checkForFullHouse(List<Card> cards){
         List<Card> cc = cards;
         Card[] three = checkForThreeOfAKind(cc);
         
@@ -101,12 +180,12 @@ class PokerRules{
                 cc.remove(card);
             }
             if(checkForPair(cc) != null){
-                return true;
+                return three;
             }
         }
-        return false;
+        return null;
     }
-    public static boolean checkForFlush(List<Card> cards){
+    public static Card[] checkForFlush(List<Card> cards){
         CardSuit suit = null;
         
         for(Card card: cards){
@@ -116,12 +195,14 @@ class PokerRules{
             }
             
             if(!suit.equals(card.getSuit())){
-                return false;
+                return null;
             }
         }
-        return true;
+        Card[] cc = new Card[cards.size()];
+        cc = cards.toArray(cc);
+        return cc;
     }
-    public static boolean checkForStraight(List<Card> cards){
+    public static Card[] checkForStraight(List<Card> cards){
         List<Object> lowSt = Arrays.asList("A",2,3,4,5);
         
         List<Object> values = new LinkedList();
@@ -130,26 +211,34 @@ class PokerRules{
         }
         
         if(values.containsAll(lowSt)){
-            return true;
+            Card[] cc = new Card[cards.size()];
+            cc = cards.toArray(cc);
+            return cc;
         }
         
-        Card high = checkForHighCard(cards);
+        Card[] high = checkForHighCard(cards);
         int index = Integer.MAX_VALUE;
         
         for(int x = 0; x < CardValues.getValues().length; x++){
-            if(high.getValue() == CardValues.getValues()[x]){
+            if(high[0].getValue() == CardValues.getValues()[x]){
                 index = x;
             }
         }
         if((index-4) < 0){
-            return false;
+            return null;
         }
         
         List<Object> st = new LinkedList();
         for(int y = index; y >= index - 4; y--){
             st.add(CardValues.getValues()[y]);
         }
-        return values.containsAll(st);
+        
+        if(values.containsAll(st)){
+            Card[] cc = new Card[cards.size()];
+            cc = cards.toArray(cc);
+            return cc;
+        }
+        return null;
     }
     public static Card[] checkForThreeOfAKind(List<Card> cards){
         List<List<Card>> lcards = new LinkedList<>();
@@ -179,9 +268,7 @@ class PokerRules{
             }
         }
         for(List<Card> c: lcards){
-            
             if(c.size() == 3){
-                
                 Card[] cc = new Card[c.size()];
                 cc = c.toArray(cc);
                 return  cc;
@@ -190,7 +277,7 @@ class PokerRules{
         return null;
     }
     public static Card[] checkForTwoPair(List<Card> cards){
-    List<List<Card>> lcards = new LinkedList<>();
+        List<List<Card>> lcards = new LinkedList<>();
         
         for(Card card: cards){
             if(lcards.isEmpty()){
@@ -259,9 +346,7 @@ class PokerRules{
         }
         return null;
     }
-    public static Card checkForHighCard(List<Card> cards){
-        return Card.compareCards(cards);
-    }
-    
-    
+    public static Card[] checkForHighCard(List<Card> cards){
+        return new Card[]{Card.compareCards(cards)};
+    } 
 }

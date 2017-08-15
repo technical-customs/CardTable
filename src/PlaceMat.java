@@ -1,16 +1,12 @@
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class PlaceMat {
     private Rectangle[] placeHolderLocations = new Rectangle[7];
@@ -181,16 +177,6 @@ class PlaceMat {
         }catch(Exception ex){
             System.out.println("No More Cards " + ex);
         }
-        
-        for(Map m: spotMap.keySet()){
-            //System.out.println("KEY: " + m.toString() + " ");
-            
-            for(Card c: spotMap.values()){
-                //System.out.println("CARD: " + c.toString());
-            }
-        }
-        
-        
 
     }
     

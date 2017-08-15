@@ -16,6 +16,9 @@ class Player{
     public Player(){
         
     }
+    public Player(String name){
+        this.name = name;
+    }
     public void setNorthsouth(boolean northsouth){
         this.northsouth = northsouth;
     }
@@ -47,8 +50,6 @@ class Player{
         this.height = height;
     }
     
-   
-
     public void setName(String name){
         this.name = name;
     }

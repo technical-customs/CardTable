@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -13,7 +12,6 @@ class Card{
     final private Object value;
     private boolean show = false;
     private boolean highlight = false;
-    
     private int x=0,y=0,width=25,height=30;
 
     public Card(Object value, CardSuit suit){
@@ -38,7 +36,6 @@ class Card{
     public boolean getShow(){
         return show;
     }
-    
     public void highlight(boolean highlight){
         this.highlight = highlight;
     }
@@ -51,32 +48,28 @@ class Card{
     public void setX(int x) {
         this.x = x;
     }
-
     public int getY() {
         return y;
     }
     public void setY(int y) {
         this.y = y;
     }
-
     public int getWidth() {
         return width;
     }
     public void setWidth(int width) {
         this.width = width;
     }
-
     public int getHeight() {
         return height;
     }
     public void setHeight(int height) {
         this.height = height;
     }
-
     public void reset(){
         highlight = false;
-        this.width = 25;
-        this.height = 30;
+        this.width = CARDWIDTH;
+        this.height = CARDHEIGHT;
     }
     public synchronized void draw(Graphics2D g2){
         cardRect.setBounds(this.x, this.y, this.width, this.height);
@@ -106,44 +99,6 @@ class Card{
         }
         
         
-    }
-    
-    @Override
-    public String toString(){
-        return value + " " + suit.getSuitname();
-    }
-    
-    @Override
-    public boolean equals(Object obj){
-        if (obj == null) {
-            return false;
-        }
-        if (!Card.class.isAssignableFrom(obj.getClass())) {
-            return false;
-        }
-        final Card other = (Card) obj;
-        if((this.getSuit().getSuitname() == null) ? (other.getSuit().getSuitname() != null) : !this.getSuit().equals(other.getSuit())) {
-            return false;
-        }
-        if((this.getValue() == null) ? (other.getValue() != null) : !this.getValue().equals(other.getValue())) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.cardRect);
-        hash = 89 * hash + Objects.hashCode(this.suit);
-        hash = 89 * hash + Objects.hashCode(this.value);
-        hash = 89 * hash + (this.show ? 1 : 0);
-        hash = 89 * hash + (this.highlight ? 1 : 0);
-        hash = 89 * hash + this.x;
-        hash = 89 * hash + this.y;
-        hash = 89 * hash + this.width;
-        hash = 89 * hash + this.height;
-        return hash;
     }
     
     public static Card compareCards(List<Card> cards){
@@ -281,5 +236,41 @@ class Card{
             }
         }
         
+    }
+    
+    @Override
+    public String toString(){
+        return value + " " + suit.getSuitname();
+    }
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+        if (!Card.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Card other = (Card) obj;
+        if((this.getSuit().getSuitname() == null) ? (other.getSuit().getSuitname() != null) : !this.getSuit().equals(other.getSuit())) {
+            return false;
+        }
+        if((this.getValue() == null) ? (other.getValue() != null) : !this.getValue().equals(other.getValue())) {
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + Objects.hashCode(this.cardRect);
+        hash = 89 * hash + Objects.hashCode(this.suit);
+        hash = 89 * hash + Objects.hashCode(this.value);
+        hash = 89 * hash + (this.show ? 1 : 0);
+        hash = 89 * hash + (this.highlight ? 1 : 0);
+        hash = 89 * hash + this.x;
+        hash = 89 * hash + this.y;
+        hash = 89 * hash + this.width;
+        hash = 89 * hash + this.height;
+        return hash;
     }
 }
