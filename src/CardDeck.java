@@ -127,10 +127,15 @@ class CardDeck {
     }
     
     public static void main(String[] args) throws InterruptedException{
+        List<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
         Player p3 = new Player("P3");
         Player p4 = new Player("P4");
+        players.add(p1);
+        players.add(p2);
+        players.add(p3);
+        players.add(p4);
         
         List<List<Card>> playerCards = new ArrayList();
 
@@ -138,22 +143,29 @@ class CardDeck {
         cd.makeDeck(1);
         cd.shuffleDeck();
         
+        Player winner = null;
+        while(winner == null){
+        for(Player player: players){
+            player.clearHand();
+        }
+        cd.collectDeck();
+        
         for(int x = 0; x < 5; x++){
             
             p1.addCardToHand(cd.dealCard());
             System.out.println(p1.toString());
-            Thread.sleep(1000);
+            Thread.sleep(500);
             p2.addCardToHand(cd.dealCard());
             System.out.println(p2.toString());
-            Thread.sleep(1000);
+            Thread.sleep(500);
             p3.addCardToHand(cd.dealCard());
             System.out.println(p3.toString());
-            Thread.sleep(1000);
+            Thread.sleep(500);
             p4.addCardToHand(cd.dealCard());
             System.out.println(p4.toString());
-            Thread.sleep(1000);
+            Thread.sleep(500);
             System.out.println();
-            Thread.sleep(1000);
+            Thread.sleep(500);
             
         }
         playerCards.add(p1.getCardsInHand());
@@ -169,13 +181,7 @@ class CardDeck {
         List<Card> comphands = Arrays.asList(PokerRules.compareHands(playerCards));
         
         if(comphands == null){
-           System.out.println("Tie - ");
-           
-           
-           System.out.println(p1.getName() + " - " + PokerRules.getHandValue(p1.getCardsInHand()));
-           System.out.println(p2.getName() + " - " + PokerRules.getHandValue(p2.getCardsInHand()));
-           System.out.println(p3.getName() + " - " + PokerRules.getHandValue(p3.getCardsInHand()));
-           System.out.println(p4.getName() + " - " + PokerRules.getHandValue(p4.getCardsInHand()));
+           System.out.println("Tie");
         }else if(p1.getCardsInHand().containsAll(comphands)){
             System.out.println("Winner is " + p1.getName() + " - " + PokerRules.getHandValue(p1.getCardsInHand()));
             p1.setPoints(p1.getPoints()+ PokerRules.checkHand(p1.getCardsInHand()).getA());
@@ -193,5 +199,18 @@ class CardDeck {
             p4.setPoints(p4.getPoints()+ PokerRules.checkHand(p4.getCardsInHand()).getA());
             System.out.println(p4.getName() + " Points:" + p4.getPoints());
         }
+        
+        System.out.println();
+        System.out.println();
+        
+        for(Player player: players){
+            if(player.getPoints() >= 50){
+                winner = player;
+            }
+        }
+        
+        }
+        System.out.println("WINNER OF POKER: " + winner.getName() + " Points:" + winner.getPoints());
+        
     }
 }

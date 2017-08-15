@@ -108,7 +108,7 @@ class PokerRules{
     }
     public static Card[] compareHands(List<List<Card>> list){
         List<Card> highHand = null;
-        
+        boolean tie = false;
         for(List<Card> listItem: list){
             if(highHand == null){
                 highHand = listItem;
@@ -116,10 +116,13 @@ class PokerRules{
             }
             highHand = compareHands(highHand, listItem);
             
-            
+            if(highHand == null){
+                tie = true;
+                highHand = listItem;
+            }
         }
-        if(highHand == null){
-            return new Card[]{};
+        if(tie){
+            return null;
         }
         Card[] cc = new Card[highHand.size()];
         cc = highHand.toArray(cc);
